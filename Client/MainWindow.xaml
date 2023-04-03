@@ -1,0 +1,117 @@
+﻿<Window x:Class="Client.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:local="clr-namespace:Server"
+        mc:Ignorable="d" FontSize="14" Name="wMain" Icon="User.ico"
+        Title="Client" Height="272.269" Width="442.675">
+    <Window.Resources>
+        <local:BooleanToConnectDisconnectConverter x:Key="BooleanToConnectDisconnectConverter" />
+        <local:BooleanToClientStatusMessageConverter x:Key="BooleanToClientStatusMessageConverter" />
+        <local:BooleanToBrushConverter x:Key="BooleanToBrushConverter" />
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="3"/>
+            <Setter Property="Padding" Value="3"/>
+        </Style>
+        <Style TargetType="xctk:IntegerUpDown">
+            <Setter Property="Margin" Value="3"/>
+            <Setter Property="Padding" Value="3"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="Margin" Value="3"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Width" Value="70"/>
+            <Setter Property="Margin" Value="3"/>
+        </Style>
+        <Style TargetType="ListBox">
+            <Setter Property="Margin" Value="3"/>
+        </Style>
+    </Window.Resources>
+    <DockPanel Margin="0 10 0 0">
+        <StatusBar Name="sbMain" DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock Text="{Binding Path=IsClientConnected,Converter={StaticResource BooleanToClientStatusMessageConverter}}" Background="{Binding Path=IsClientConnected,Converter={StaticResource BooleanToBrushConverter}}" Width="auto" Padding="3" />
+            </StatusBarItem>
+        </StatusBar>
+
+        <Grid Name="gControl" DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Column="0" Grid.Row="0" Text="Address:"/>
+            <TextBox Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="0" Text="{Binding Path=IpAddress, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Path=IsClientDisconnected}"/>
+            <xctk:IntegerUpDown Grid.Column="2" Grid.Row="0" Value="{Binding Path=Port, UpdateSourceTrigger=PropertyChanged}" Width="70" IsEnabled="{Binding Path=IsClientDisconnected}"/>
+            <TextBox x:Name="Count" Grid.Column="3" Grid.ColumnSpan="1" Grid.Row="0" Text="0"/>
+            <TextBlock Visibility="Hidden" Grid.Column="0" Grid.Row="1" Text="Username:" IsEnabled="False"/>
+            <TextBox Visibility="Hidden" Grid.Column="1" Grid.Row="1" Text="{Binding Path=Username, UpdateSourceTrigger=PropertyChanged}" IsEnabled="False"/>
+
+            <Button Name="bSwitchClientState" Grid.Column="4" Grid.Row="0" Grid.RowSpan="2" Content="{Binding Path=IsClientConnected,Converter={StaticResource BooleanToConnectDisconnectConverter}}" Click="bSwitchClientState_Click"/>
+        </Grid>
+        <DockPanel IsEnabled="{Binding Path=IsClientConnected}">
+            <Grid DockPanel.Dock="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Visibility="Hidden" Grid.Column="0" Grid.Row="0" Text="Target Username:" IsEnabled="False"/>
+                <TextBox Visibility="Hidden" Name="tbTargetUsername" Text="Server" Grid.Column="1" Grid.Row="0" IsEnabled="False"/>
+
+                <TextBlock Grid.Column="0" Grid.Row="1" Text="Message:"/>
+                <TextBox Name="tbMessage" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="1"/>
+
+                <Button Name="bSend" Grid.Column="5" Grid.Row="0" Grid.RowSpan="2" Content="Send" Click="bSend_Click"/>
+            </Grid>
+
+            <Grid DockPanel.Dock="Bottom">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="10.933"/>
+                    <RowDefinition Height="39.067"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Button Visibility="Hidden" Name="btnReset" Grid.Row="0" Grid.ColumnSpan="1" Content="RESET" Width="Auto" Click="btnReset_Click"/>
+                <!--<Button Name="btin" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="1" Content="PIN" Width="Auto"/>
+                <Button Name="btountReset" Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="1" Content="Reset" Width="Auto"/>-->
+                <ListBox Grid.Row="9" Grid.ColumnSpan="4" ItemsSource="{Binding Path=lstChat}"/>
+                <Button Name="btn11" Width="Auto" Grid.Column="0" Content="12V ON OK" Click="Btn11_Click" Margin="3,6,21,0" />
+                <Button Name="btn22" Width="Auto" Grid.Column="1" Content="PINCHECK OK" Click="Btn22_Click" Margin="77,5,45,1" RenderTransformOrigin="0.903,0.591" Grid.ColumnSpan="2" />
+                <Button Name="btn33" Width="Auto" Grid.Column="3" Content="Pin Req" Click="Btn33_Click" Margin="33,6,3,0" />
+                <Button x:Name="btn11_Copy" Width="Auto" Content="12V ON NG" Click="Btn11_Copy_Click" Margin="93,5,37,0" Height="44" VerticalAlignment="Top" Grid.ColumnSpan="2" />
+                <Button x:Name="btn22_Copy" Width="Auto" Grid.Column="2" Content="PINCHECK NG" Click="Btn22_Copy_Click" Margin="41,6,81,0" RenderTransformOrigin="0.903,0.591" Grid.ColumnSpan="2" />
+            </Grid>
+        </DockPanel>
+    </DockPanel>
+</Window>
